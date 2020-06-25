@@ -29,4 +29,8 @@ class User < ApplicationRecord
   has_many :interests, :through => :user_interests
 
   has_secure_password
+
+  def get_user_posts
+    return self.posts
+  end
 end
