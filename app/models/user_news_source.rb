@@ -1,0 +1,2 @@
+class UserNewsSource < ApplicationRecord
+end
