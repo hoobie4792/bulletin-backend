@@ -94,9 +94,8 @@ ActiveRecord::Schema.define(version: 2020_06_24_194059) do
   end
 
   create_table "shares", force: :cascade do |t|
-    t.text "content"
-    t.integer "post_id"
-    t.integer "user_id"
+    t.integer "parent_post_id"
+    t.integer "shared_post_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
