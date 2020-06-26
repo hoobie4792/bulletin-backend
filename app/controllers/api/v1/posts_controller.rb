@@ -23,7 +23,8 @@ class Api::V1::PostsController < ApplicationController
 
   def create
     if current_user
-      post = Post.new(content: post_params[:content], user: current_user)
+      post = Post.new(post_params)
+      post.user = current_user
       if post.save
         render :json => serialized_post(post), :status => :ok
       else
