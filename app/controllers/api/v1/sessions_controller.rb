@@ -12,7 +12,7 @@ class Api::V1::SessionsController < ApplicationController
         render :json => { message: 'Password is incorrect' }, :status => :unauthorized
       end
     else
-      render :json => { message: "That email does not exist" }, :status => :not_found
+      render :json => { message: "That email or username does not exist" }, :status => :not_found
     end
   end
 
