@@ -13,4 +13,12 @@ class Post < ApplicationRecord
   # Tag relationships
   has_many :post_tags
   has_many :tags, :through => :post_tags
+
+  def self.get_posts_for_user(user)
+    posts = Post.all
+  end
+
+  def likes_count
+    self.likes.length
+  end
 end
