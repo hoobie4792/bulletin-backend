@@ -33,4 +33,8 @@ class User < ApplicationRecord
   def get_user_posts
     return self.posts
   end
+
+  def posts_count
+    self.posts.length
+  end
 end

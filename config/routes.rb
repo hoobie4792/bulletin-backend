@@ -10,6 +10,7 @@ Rails.application.routes.draw do
 
       post '/login', :to => 'sessions#create'
       post '/signup', :to => 'users#create'
+      post '/update_user', :to => 'users#update'
     end
   end
 end
