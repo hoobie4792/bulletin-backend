@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_24_194059) do
+ActiveRecord::Schema.define(version: 2020_06_29_144652) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -91,6 +91,13 @@ ActiveRecord::Schema.define(version: 2020_06_24_194059) do
     t.integer "user_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.date "news_published_at"
+    t.string "news_author"
+    t.string "news_image"
+    t.string "news_source"
+    t.string "news_title"
+    t.string "news_url"
+    t.boolean "is_news_story", default: false
   end
 
   create_table "shares", force: :cascade do |t|

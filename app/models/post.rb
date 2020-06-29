@@ -1,5 +1,5 @@
 class Post < ApplicationRecord
-  belongs_to :user
+  belongs_to :user, :optional => true
 
   # Shares relationships
   has_many :parent_post_relationships, :class_name => 'Share', :foreign_key => :shared_post_id
@@ -15,7 +15,12 @@ class Post < ApplicationRecord
   has_many :tags, :through => :post_tags
 
   def self.get_posts_for_user(user)
-    posts = Post.all
+    posts = []
+    posts += self.get_interests_posts(user)
+    posts += self.get_sources_posts(user)
+    posts = posts.uniq { |post| post.news_title }
+    posts += self.get_followed_users_posts(user)
+    posts.sort { |a,b| b.created_at <=> a.created_at }
   end
 
   def self.get_default_posts
@@ -25,4 +30,48 @@ class Post < ApplicationRecord
   def likes_count
     self.likes.length
   end
+
+  private
+
+  def self.get_interests_posts(user)
+    posts = []
+    newsapi = News.new(ENV['NEWSAPI_KEY'])
+    user.interests.each do |interest|
+      api_response = newsapi.get_top_headlines(category: interest.name.downcase, language: 'en', country: 'us')
+      posts += self.map_api_response(api_response)
+    end
+    posts
+  end
+
+  def self.get_sources_posts(user)
+    posts = []
+    newsapi = News.new(ENV['NEWSAPI_KEY'])
+    user.news_sources.each do |source|
+      api_response = newsapi.get_top_headlines(sources: source.name.split(' ').join('-').downcase)
+      posts += self.map_api_response(api_response)
+    end
+    posts
+  end
+
+  def self.map_api_response(api_response)
+    api_response.select { |res| !res.content.nil? }
+    .map { |res| !res.content.nil? && Post.new(
+      content: res.content.split(' [+').first,
+      news_author: res.author,
+      news_image: res.urlToImage,
+      created_at: res.publishedAt,
+      news_source: res.name,
+      news_title: res.title,
+      news_url: res.url,
+      is_news_story: true) }
+  end
+
+  def self.get_followed_users_posts(user)
+    posts = []
+    user.followeds.each do |user| 
+      posts += user.posts 
+    end
+    posts
+  end
+
 end

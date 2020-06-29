@@ -62,9 +62,10 @@ class Api::V1::UsersController < ApplicationController
       :only => [:username, :bio, :created_at],
       :methods => :posts_count,
       :include => [
-        :posts => {:only => [:id, :content, :created_at],
+        :posts => {:except => [:user_id, :updated_at],
           :methods => :likes_count,
           :include => [
+            :user => {:only => [:username]},
             :comments => {:only => [:id, :content, :created_at], 
               :include => [user: {:only => :username}]}
           ]

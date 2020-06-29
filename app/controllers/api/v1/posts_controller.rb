@@ -71,9 +71,10 @@ class Api::V1::PostsController < ApplicationController
 
   def serialized_post(post)
     post.as_json(
-      :only => [:id, :content, :created_at],
+      :except => [:user_id, :updated_at],
       :methods => :likes_count,
       :include => [
+        :user => {:only => [:username]},
         :comments => {:only => [:id, :content, :created_at], 
           :include => [user: {:only => :username}]}
       ]
@@ -82,9 +83,10 @@ class Api::V1::PostsController < ApplicationController
 
   def serialized_posts(posts)
     posts.as_json(
-      :only => [:id, :content, :created_at],
+      :except => [:user_id, :updated_at],
       :methods => :likes_count,
       :include => [
+        :user => {:only => [:username]},
         :comments => {:only => [:id, :content, :created_at], 
           :include => [user: {:only => :username}]}
       ]

@@ -109,16 +109,16 @@ puts 'Tags created'
 
 print 'Creating news sources...'
 create_news_sources
-# UserNewsSource.create(user: brandon, news_source: NewsSource.first)
-# UserNewsSource.create(user: brandon, news_source: NewsSource.second)
-# UserNewsSource.create(user: robert, news_source: NewsSource.second)
-# UserNewsSource.create(user: geoffrey, news_source: NewsSource.third)
+UserNewsSource.create(user: brandon, news_source: NewsSource.first)
+UserNewsSource.create(user: brandon, news_source: NewsSource.second)
+UserNewsSource.create(user: robert, news_source: NewsSource.second)
+UserNewsSource.create(user: geoffrey, news_source: NewsSource.third)
 puts 'News sources created'
 
 print 'Creating interests...'
 create_interests
-# UserInterest.create(user: brandon, interest: Interest.first)
-# UserInterest.create(user: brandon, interest: Interest.second)
-# UserInterest.create(user: robert, interest: Interest.second)
-# UserInterest.create(user: geoffrey, interest: Interest.third)
+UserInterest.create(user: brandon, interest: Interest.first)
+UserInterest.create(user: brandon, interest: Interest.second)
+UserInterest.create(user: robert, interest: Interest.second)
+UserInterest.create(user: geoffrey, interest: Interest.third)
 puts 'Interests created'
