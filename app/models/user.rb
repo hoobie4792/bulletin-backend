@@ -37,4 +37,22 @@ class User < ApplicationRecord
   def posts_count
     self.posts.length
   end
+
+  def serialized
+    self.as_json(
+      :only => [:username, :bio, :created_at],
+      :methods => :posts_count,
+      :include => [
+        :posts => {:except => [:user_id, :updated_at],
+          :methods => :likes_count,
+          :include => [
+            :user => {:only => [:username]},
+            :comments => {:only => [:id, :content, :created_at], 
+              :include => [user: {:only => :username}]}
+          ]
+        }
+      ]
+    )
+  end
+
 end
