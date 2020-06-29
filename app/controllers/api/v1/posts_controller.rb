@@ -1,12 +1,14 @@
 class Api::V1::PostsController < ApplicationController
   
-  before_action :authenticate, only: [:index, :show, :create, :destroy]
+  before_action :authenticate, :only => [:index, :show, :create, :destroy]
 
   def index
     if current_user
       posts = Post.get_posts_for_user(current_user)
-      render :json => serialized_posts(posts), :status => :ok
+    else
+      posts = Post.get_default_posts
     end
+    render :json => serialized_posts(posts), :status => :ok
   end
 
   def show
