@@ -5,7 +5,6 @@ class Api::V1::SessionsController < ApplicationController
   def create
     user = User.find_by(username: session_params[:username_email]) || 
       User.find_by(email: session_params[:username_email])
-
     if user
       if user.authenticate(session_params[:password])
         token = JWT.encode({ user_id: user.id }, ENV['SUPER_SECRET_KEY'])
