@@ -8,7 +8,7 @@ class Api::V1::PostsController < ApplicationController
     else
       posts = Post.get_default_posts
     end
-    render :json => serialized_posts(posts), :status => :ok
+    render :json => Post.serialized_posts(posts), :status => :ok
   end
 
   def show
@@ -20,7 +20,7 @@ class Api::V1::PostsController < ApplicationController
         return
       end
     end
-    render :json => serialized_post(post), :status => :ok
+    render :json => post.serialized, :status => :ok
   end
 
   def create
@@ -28,7 +28,7 @@ class Api::V1::PostsController < ApplicationController
       post = Post.new(post_params)
       post.user = current_user
       if post.save
-        render :json => serialized_post(post), :status => :ok
+        render :json => post.serialized, :status => :ok
       else
         render :json => { message: 'Could not create post' }, :status => :bad_request
       end
@@ -41,7 +41,7 @@ class Api::V1::PostsController < ApplicationController
     if current_user
       post = Post.find_by(id: params[:id])
       if post.user == current_user && post.update(post_params)
-        render :json => serialized_post(post), :status => :ok
+        render :json => post.serialized, :status => :ok
       else
         render :json => { message: 'Could not update post' }, :status => :bad_request
       end
@@ -67,30 +67,6 @@ class Api::V1::PostsController < ApplicationController
 
   def post_params
     params.require(:post).permit(:content)
-  end
-
-  def serialized_post(post)
-    post.as_json(
-      :except => [:user_id, :updated_at],
-      :methods => :likes_count,
-      :include => [
-        :user => {:only => [:username]},
-        :comments => {:only => [:id, :content, :created_at], 
-          :include => [user: {:only => :username}]}
-      ]
-    )
-  end
-
-  def serialized_posts(posts)
-    posts.as_json(
-      :except => [:user_id, :updated_at],
-      :methods => :likes_count,
-      :include => [
-        :user => {:only => [:username]},
-        :comments => {:only => [:id, :content, :created_at], 
-          :include => [user: {:only => :username}]}
-      ]
-    )
   end
 
 end

@@ -4,35 +4,56 @@ class Api::V1::LikesController < ApplicationController
 
   def create
     if current_user
-      like = Like.new(like_params)
-      like.user = current_user
-      if like.save
-        render :json => like.as_json(:only => [:id, :created_at]), :status => :ok
+      post = Post.find_by(id: post_params[:id]) || Post.find_by(
+        content: post_params[:content],
+        news_author: post_params[:news_author],
+        news_image: post_params[:news_image],
+        news_title: post_params[:news_title]
+      )
+      if !post
+        post = Post.new(post_params)
+        if !post.save
+          render :json => { message: post.errors.full_messages.join(', ')}, :status => :bad_request
+          return
+        end
+      end
+      like = Like.find_by(post: post, user: current_user)
+      if like
+        if like.destroy
+          render :json => post.serialized, :status => :ok
+        else
+          render :json => { message: like.errors.full_messages.join(', ') }, :status => :bad_request
+        end
       else
-        render :json => { message: 'Could not create like' }, :status => :bad_request
+        like = Like.new(post: post, user: current_user)
+        if like.save
+          render :json => post.serialized, :status => :ok
+        else
+          render :json => { message: like.errors.full_messages.join(', ') }, :status => :bad_request
+        end
       end
     else
-      render :json => { message: 'Must be logged in to create like' }, :status => :unauthorized
+      render :json => { message: 'Must be logged in to toggle like' }, :status => :unauthorized
     end
   end
 
-  def destroy
-    if current_user
-      like = Like.find_by(post_id: params[:post_id], user: current_user)
-      if like && like.destroy
-        render :json => true, :status => :ok
-      else
-        render :json => false, :status => :bad_request
-      end
-    else
-      render :json => { message: 'Must be logged in to delete like' }, :status => :unauthorized
-    end
-  end
+  # def destroy
+  #   if current_user
+  #     like = Like.find_by(post_id: post_params[:id], user: current_user)
+  #     if like && like.destroy
+  #       render :json => true, :status => :ok
+  #     else
+  #       render :json => false, :status => :bad_request
+  #     end
+  #   else
+  #     render :json => { message: 'Must be logged in to delete like' }, :status => :unauthorized
+  #   end
+  # end
 
   private
 
-  def like_params
-    params.require(:like).permit(:post_id)
+  def post_params
+    params.require(:post).permit(:id, :content, :created_at, :news_author, :news_image, :news_source, :news_title, :news_url, :is_news_story)
   end
 
 end

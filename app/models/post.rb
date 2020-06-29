@@ -21,6 +21,8 @@ class Post < ApplicationRecord
     posts = posts.uniq { |post| post.news_title }
     posts += self.get_followed_users_posts(user)
     posts.sort { |a,b| b.created_at <=> a.created_at }
+
+    # Need to replace api posts with database posts if it exists
   end
 
   def self.get_default_posts
@@ -29,6 +31,30 @@ class Post < ApplicationRecord
 
   def likes_count
     self.likes.length
+  end
+
+  def serialized
+    self.as_json(
+      :except => [:user_id, :updated_at],
+      :methods => :likes_count,
+      :include => [
+        :user => {:only => [:username]},
+        :comments => {:only => [:id, :content, :created_at], 
+          :include => [user: {:only => :username}]}
+      ]
+    )
+  end
+
+  def self.serialized_posts(posts)
+    posts.as_json(
+      :except => [:user_id, :updated_at],
+      :methods => :likes_count,
+      :include => [
+        :user => {:only => [:username]},
+        :comments => {:only => [:id, :content, :created_at], 
+          :include => [user: {:only => :username}]}
+      ]
+    )
   end
 
   private

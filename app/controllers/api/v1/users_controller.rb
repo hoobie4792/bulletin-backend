@@ -11,7 +11,7 @@ class Api::V1::UsersController < ApplicationController
           return
         end
       end
-      render :json => serialized_user(user), :status => :ok
+      render :json => user.serialized, :status => :ok
     else
       render :json => { message: 'That user does not exist' }, :status => :not_found
     end
@@ -30,7 +30,7 @@ class Api::V1::UsersController < ApplicationController
   def update
     if current_user
       if current_user.update(user_params) 
-        render :json => serialized_user(current_user), :status => :ok
+        render :json => current_user.serialized, :status => :ok
       else
         render :json => { message: 'Could not update user' }, :status => :bad_request
       end
@@ -55,23 +55,6 @@ class Api::V1::UsersController < ApplicationController
 
   def user_params
     params.require(:user).permit(:email, :username, :password, :bio, :is_private)
-  end
-
-  def serialized_user(user)
-    user.as_json(
-      :only => [:username, :bio, :created_at],
-      :methods => :posts_count,
-      :include => [
-        :posts => {:except => [:user_id, :updated_at],
-          :methods => :likes_count,
-          :include => [
-            :user => {:only => [:username]},
-            :comments => {:only => [:id, :content, :created_at], 
-              :include => [user: {:only => :username}]}
-          ]
-        }
-      ]
-    )
   end
 
 end
