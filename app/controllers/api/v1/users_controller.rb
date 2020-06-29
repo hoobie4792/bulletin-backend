@@ -1,16 +1,20 @@
 class Api::V1::UsersController < ApplicationController
   
-  before_action :authenticate, only: [:show, :update, :destroy]
+  before_action :authenticate, :only => [:show, :update, :destroy]
   
   def show
-    user = User.find_by(id: params[:id])
-    if user.is_private && current_user
-      if !user.followers.include? current_user
-        render :json => { message: 'Private account' }, :status => :unauthorized
-        return
+    user = User.find_by(username: params[:id])
+    if user
+      if user.is_private && current_user
+        if !user.followers.include? current_user
+          render :json => { message: 'Private account' }, :status => :unauthorized
+          return
+        end
       end
+      render :json => serialized_user(user), :status => :ok
+    else
+      render :json => { message: 'That user does not exist' }, :status => :not_found
     end
-    render :json => serialized_user(user), :status => :ok
   end
 
   def create
@@ -19,7 +23,7 @@ class Api::V1::UsersController < ApplicationController
       token = JWT.encode({ user_id: user.id }, ENV['SUPER_SECRET_KEY'])
       render :json => { token: token }, :status => :ok
     else
-      render :json => { message: 'Could not create user'}
+      render :json => { message: 'Could not create user'}, :status => :bad_request
     end
   end
 

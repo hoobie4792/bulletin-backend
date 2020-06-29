@@ -18,6 +18,10 @@ class Post < ApplicationRecord
     posts = Post.all
   end
 
+  def self.get_default_posts
+    posts = [Post.first, Post.second]
+  end
+
   def likes_count
     self.likes.length
   end

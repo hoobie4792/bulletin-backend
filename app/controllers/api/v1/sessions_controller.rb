@@ -1,5 +1,7 @@
 class Api::V1::SessionsController < ApplicationController
 
+  before_action :authenticate, :only => :get_username
+
   def create
     user = User.find_by(username: session_params[:username_email]) || 
       User.find_by(email: session_params[:username_email])
@@ -7,7 +9,7 @@ class Api::V1::SessionsController < ApplicationController
     if user
       if user.authenticate(session_params[:password])
         token = JWT.encode({ user_id: user.id }, ENV['SUPER_SECRET_KEY'])
-        render :json => { token: token }, status: :ok
+        render :json => { token: token, username: user.username }, status: :ok
       else
         render :json => { message: 'Password is incorrect' }, :status => :unauthorized
       end
@@ -16,7 +18,16 @@ class Api::V1::SessionsController < ApplicationController
     end
   end
 
+  def get_username
+    if current_user
+      render :json => { username: current_user.username }
+    else
+      render :json => { message: 'No user logged in'}
+    end
+  end
+
   private
+
   def session_params
     params.require(:user).permit(:username_email, :password)
   end
