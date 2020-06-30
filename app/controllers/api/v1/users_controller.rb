@@ -7,7 +7,7 @@ class Api::V1::UsersController < ApplicationController
     if user
       if user.is_private && current_user
         if !user.followers.include? current_user
-          render :json => { message: 'Private account' }, :status => :unauthorized
+          render :json => user.private_serialized, :status => :ok
           return
         end
       end

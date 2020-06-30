@@ -25,9 +25,16 @@ class Api::V1::PostsController < ApplicationController
 
   def create
     if current_user
-      post = Post.new(post_params)
+      post = Post.new(content: post_params[:content])
       post.user = current_user
       if post.save
+        post_params[:tags].each do |t| 
+          tag = Tag.find_by(name: t.downcase)
+          if !tag
+            tag = Tag.create(name: t.downcase)
+          end
+          PostTag.create(post: post, tag: tag)
+        end
         render :json => post.serialized, :status => :ok
       else
         render :json => { message: 'Could not create post' }, :status => :bad_request
@@ -66,7 +73,7 @@ class Api::V1::PostsController < ApplicationController
   private
 
   def post_params
-    params.require(:post).permit(:content)
+    params.require(:post).permit(:content, :tags => [])
   end
 
 end

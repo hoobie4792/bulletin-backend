@@ -44,6 +44,13 @@ class User < ApplicationRecord
     self.followers.include? current_user
   end
 
+  def private_serialized
+    self.as_json(
+      :only => [:username, :bio, :created_at],
+      :methods => [:posts_count, :following],
+    )
+  end
+
   def serialized
     self.as_json(
       :only => [:username, :bio, :created_at],

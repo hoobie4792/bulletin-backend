@@ -19,6 +19,7 @@ Rails.application.routes.draw do
       post '/get-username', :to => 'sessions#get_username'
       post '/signup', :to => 'users#create'
       post '/update-user', :to => 'users#update'
+      post '/get-posts-by-tag', :to => 'tags#get_posts'
     end
   end
 end
