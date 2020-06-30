@@ -8,6 +8,7 @@ Rails.application.routes.draw do
       resources :comments, :only => [:create, :update, :destroy]
       resources :likes, :only => [:create]
       resources :shares, :only => [:create]
+      resources :follows, :only => [:create]
       resources :messages, :only => [:index, :create, :destroy]
       resources :news_sources, :only => [:index]
       resources :interests, :only => [:index]
