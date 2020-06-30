@@ -39,7 +39,7 @@ class Post < ApplicationRecord
       :include => [
         :user => {:only => [:username]},
         :comments => {:only => [:id, :content, :created_at], 
-          :include => [user: {:only => :username}]}
+          :include => [:user => {:only => :username}]}
       ]
     )
   end
@@ -51,7 +51,7 @@ class Post < ApplicationRecord
       :include => [
         :user => {:only => [:username]},
         :comments => {:only => [:id, :content, :created_at], 
-          :include => [user: {:only => :username}]}
+          :include => [:user => {:only => :username}]}
       ]
     )
   end
