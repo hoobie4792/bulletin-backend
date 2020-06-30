@@ -9,6 +9,10 @@ Rails.application.routes.draw do
       resources :likes, :only => [:create]
       resources :shares, :only => [:create]
       resources :messages, :only => [:index, :create, :destroy]
+      resources :news_sources, :only => [:index]
+      resources :interests, :only => [:index]
+      resources :user_news_sources, :only => [:create]
+      resources :user_interests, :only => [:create]
 
       post '/login', :to => 'sessions#create'
       post '/get-username', :to => 'sessions#get_username'
