@@ -18,11 +18,10 @@ class Post < ApplicationRecord
     posts = []
     posts += self.get_interests_posts(user)
     posts += self.get_sources_posts(user)
+    posts = posts.map { |post| Post.find_by(content: post.content) || post }
     posts = posts.uniq { |post| post.news_title }
     posts += self.get_followed_users_posts(user)
     posts.sort { |a,b| b.created_at <=> a.created_at }
-
-    # Need to replace api posts with database posts if it exists
   end
 
   def self.get_default_posts
