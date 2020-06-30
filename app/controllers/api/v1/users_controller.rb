@@ -1,6 +1,6 @@
 class Api::V1::UsersController < ApplicationController
   
-  before_action :authenticate, :only => [:show, :update, :destroy]
+  before_action :authenticate, :only => [:show, :create, :update, :destroy]
   
   def show
     user = User.find_by(username: params[:id])
@@ -11,6 +11,7 @@ class Api::V1::UsersController < ApplicationController
           return
         end
       end
+      user.current_user = current_user
       render :json => user.serialized, :status => :ok
     else
       render :json => { message: 'That user does not exist' }, :status => :not_found

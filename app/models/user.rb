@@ -30,6 +30,8 @@ class User < ApplicationRecord
 
   has_secure_password
 
+  attr_accessor :current_user
+
   def get_user_posts
     return self.posts
   end
@@ -38,10 +40,14 @@ class User < ApplicationRecord
     self.posts.length
   end
 
+  def following
+    self.followers.include? current_user
+  end
+
   def serialized
     self.as_json(
       :only => [:username, :bio, :created_at],
-      :methods => :posts_count,
+      :methods => [:posts_count, :following],
       :include => [
         :posts => {:except => [:user_id, :updated_at],
           :methods => :likes_count,
