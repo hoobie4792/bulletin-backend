@@ -37,19 +37,6 @@ class Api::V1::LikesController < ApplicationController
     end
   end
 
-  # def destroy
-  #   if current_user
-  #     like = Like.find_by(post_id: post_params[:id], user: current_user)
-  #     if like && like.destroy
-  #       render :json => true, :status => :ok
-  #     else
-  #       render :json => false, :status => :bad_request
-  #     end
-  #   else
-  #     render :json => { message: 'Must be logged in to delete like' }, :status => :unauthorized
-  #   end
-  # end
-
   private
 
   def post_params
