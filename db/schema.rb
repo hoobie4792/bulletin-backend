@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_29_144652) do
+ActiveRecord::Schema.define(version: 2020_06_30_211745) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -70,6 +70,7 @@ ActiveRecord::Schema.define(version: 2020_06_29_144652) do
     t.text "content"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "notification_type"
   end
 
   create_table "participants", force: :cascade do |t|
@@ -91,7 +92,6 @@ ActiveRecord::Schema.define(version: 2020_06_29_144652) do
     t.integer "user_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.date "news_published_at"
     t.string "news_author"
     t.string "news_image"
     t.string "news_source"

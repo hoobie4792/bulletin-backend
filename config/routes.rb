@@ -14,6 +14,7 @@ Rails.application.routes.draw do
       resources :interests, :only => [:index]
       resources :user_news_sources, :only => [:create]
       resources :user_interests, :only => [:create]
+      resources :notifications, :only => [:index]
 
       post '/login', :to => 'sessions#create'
       post '/get-username', :to => 'sessions#get_username'

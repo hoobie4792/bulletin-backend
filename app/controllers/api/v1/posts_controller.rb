@@ -28,6 +28,8 @@ class Api::V1::PostsController < ApplicationController
       post = Post.new(content: post_params[:content])
       post.user = current_user
       if post.save
+        post.current_user = current_user
+        post.create_notifications
         post_params[:tags].each do |t| 
           tag = Tag.find_by(name: t.downcase)
           if !tag
