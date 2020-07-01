@@ -21,6 +21,7 @@ Rails.application.routes.draw do
       post '/signup', :to => 'users#create'
       post '/update-user', :to => 'users#update'
       post '/get-posts-by-tag', :to => 'tags#get_posts'
+      post '/search-users', :to => 'users#search_users'
     end
   end
 end
