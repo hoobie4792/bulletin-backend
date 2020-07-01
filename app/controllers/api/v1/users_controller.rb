@@ -53,7 +53,11 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def search_users
-    render :json => User.where("username LIKE ?", "%#{user_params[:username]}%").uniq.as_json(:only => [:username])
+    if user_params[:username].empty?
+      render :json => [].as_json, :status => :ok
+    else
+      render :json => User.where("username LIKE ?", "%#{user_params[:username]}%").uniq.as_json(:only => [:username]), :status => :ok
+    end
   end
 
   private
