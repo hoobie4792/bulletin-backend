@@ -64,7 +64,7 @@ Follow.create(follower: geoffrey, followed: brandon)
 puts 'Folows created'
 
 print 'Creating notifications...'
-Notification.create(content: 'You got mail', user: brandon)
+Notification.create(content: 'You got mail', user: brandon, notification_type: 'general')
 puts 'Notifications created'
 
 print 'Creating posts...'

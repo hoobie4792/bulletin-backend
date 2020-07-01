@@ -14,6 +14,8 @@ class Post < ApplicationRecord
   has_many :post_tags
   has_many :tags, :through => :post_tags
 
+  attr_accessor :current_user
+
   def self.get_posts_for_user(user)
     posts = []
     posts += self.get_interests_posts(user)
@@ -25,11 +27,22 @@ class Post < ApplicationRecord
   end
 
   def self.get_default_posts
-    posts = [Post.first, Post.second]
+    user = User.new()
+    interest = Interest.find_by(name: 'General')
+    news_source = NewsSource.find_by(name: 'USA Today')
+    user.interests << interest
+    user.news_sources << news_source
+    self.get_posts_for_user(user)
   end
 
   def likes_count
     self.likes.length
+  end
+
+  def create_notifications
+    self.user.followers.each do |user| 
+      Notification.create(user: user, notification_type: 'post', content: "#{current_user.username} created a new post")
+    end
   end
 
   def serialized
