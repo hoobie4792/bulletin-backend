@@ -32,6 +32,11 @@ class User < ApplicationRecord
 
   attr_accessor :current_user
 
+  validates :username, :email, :password, :presence => true
+  validates :username, :email, :uniqueness => true
+  validates :email, :format => { with: URI::MailTo::EMAIL_REGEXP }
+
+
   def get_user_posts
     return self.posts
   end

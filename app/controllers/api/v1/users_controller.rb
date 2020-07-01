@@ -20,11 +20,15 @@ class Api::V1::UsersController < ApplicationController
 
   def create
     user = User.new(user_params)
-    if user.save
-      token = JWT.encode({ user_id: user.id }, ENV['SUPER_SECRET_KEY'])
-      render :json => { token: token }, :status => :ok
+    if user_params[:password] != user_params[:password_confirmation]
+      render :json => { message: 'Passwords must match' }
     else
-      render :json => { message: 'Could not create user'}, :status => :bad_request
+      if user.save
+        token = JWT.encode({ user_id: user.id }, ENV['SUPER_SECRET_KEY'])
+        render :json => { token: token }, :status => :ok
+      else
+        render :json => { message: user.errors.full_messages.join(', ')}, :status => :bad_request
+      end
     end
   end
 
