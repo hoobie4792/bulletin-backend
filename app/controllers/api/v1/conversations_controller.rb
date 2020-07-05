@@ -18,4 +18,35 @@ class Api::V1::ConversationsController < ApplicationController
     end
   end
 
+  def create
+    if current_user
+      byebug
+      conversation = Conversation.new
+      if conversation.save
+        conversation_params.participant_usernames.each do |username|
+          user = User.find_by(username: username)
+          if user
+            Participant.create(conversation: conversation, user: user)
+          end
+        end
+        render :json => conversation.as_json(
+          :include => [
+            :participants => { :only => :id, :include => [:user => { :only => :username}] },
+            :messages => { :only => [:content, :created_at, :updated_at], :include => [:user => { :only => :username }] }
+          ]
+        )
+      else
+        render :json => { message: 'Could not create conversation' }, :status => :bad_request
+      end
+    else
+      render :json => { message: 'Must be logged in to create conversation' }, :status => :unauthorized
+    end
+  end
+
+  private
+
+  def conversation_params
+    params.require(:conversation).permit(:participant_usernames => [])
+  end
+
 end
