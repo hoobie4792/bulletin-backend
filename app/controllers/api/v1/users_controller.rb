@@ -1,6 +1,6 @@
 class Api::V1::UsersController < ApplicationController
   
-  before_action :authenticate, :only => [:show, :create, :update, :destroy]
+  before_action :authenticate, :only => [:show, :create, :update, :destroy, :get_interests_and_news_sources]
   
   def show
     user = User.find_by(username: params[:id])
@@ -61,6 +61,17 @@ class Api::V1::UsersController < ApplicationController
       render :json => [].as_json, :status => :ok
     else
       render :json => User.where("username LIKE ?", "%#{user_params[:username]}%").uniq.as_json(:only => [:username]), :status => :ok
+    end
+  end
+
+  def get_interests_and_news_sources
+    if current_user
+      render :json => { 
+        interests: current_user.interests.as_json(:only => [:name]), 
+        news_sources: current_user.news_sources.as_json(:only => [:name])
+      }
+    else
+      render :json => { message: 'Must be logged in to get interests and news sources' }
     end
   end
 
