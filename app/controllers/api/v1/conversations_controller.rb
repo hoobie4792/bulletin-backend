@@ -20,10 +20,10 @@ class Api::V1::ConversationsController < ApplicationController
 
   def create
     if current_user
-      byebug
       conversation = Conversation.new
       if conversation.save
-        conversation_params.participant_usernames.each do |username|
+        Participant.create(conversation: conversation, user: current_user)
+        conversation_params[:participant_usernames].each do |username|
           user = User.find_by(username: username)
           if user
             Participant.create(conversation: conversation, user: user)
