@@ -67,8 +67,8 @@ class Api::V1::UsersController < ApplicationController
   def get_interests_and_news_sources
     if current_user
       render :json => { 
-        interests: current_user.interests.as_json(:only => [:name]), 
-        news_sources: current_user.news_sources.as_json(:only => [:name])
+        interests: current_user.interests.as_json(:only => [:id, :name]), 
+        news_sources: current_user.news_sources.as_json(:only => [:id, :name])
       }
     else
       render :json => { message: 'Must be logged in to get interests and news sources' }
