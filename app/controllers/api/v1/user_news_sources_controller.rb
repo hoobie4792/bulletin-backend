@@ -4,7 +4,11 @@ class Api::V1::UserNewsSourcesController < ApplicationController
 
   def create
     if current_user
-      news_sources_params[:ids].each { |news_source_id| UserNewsSource.create(user: current_user, news_source_id: news_source_id) }
+      news_sources_params[:ids].each do |news_source_id| 
+        if !UserNewsSource.find_by(user:current_user, news_source_id: news_source_id)
+          UserNewsSource.create(user: current_user, news_source_id: news_source_id)
+        end
+      end
       render :json => true
     else
       render :json => { message: 'Must be logged in to update sources' }, :status => :unauthorized
