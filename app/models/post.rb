@@ -14,8 +14,6 @@ class Post < ApplicationRecord
   has_many :post_tags
   has_many :tags, :through => :post_tags
 
-  validates :content, :presence => true
-
   attr_accessor :current_user
 
   def self.get_posts_for_user(user)
@@ -53,6 +51,11 @@ class Post < ApplicationRecord
       :methods => :likes_count,
       :include => [
         :user => {:only => [:username]},
+        :shared_post => {
+          :except => [:user_id, :updated_at],
+          :include => [
+          :user => {:only => [:username]}
+        ]},
         :comments => {:only => [:id, :content, :created_at], 
           :include => [:user => {:only => :username}]},
         :tags => {:only => [:name]}
@@ -66,6 +69,11 @@ class Post < ApplicationRecord
       :methods => :likes_count,
       :include => [
         :user => {:only => [:username]},
+        :shared_post => {
+          :except => [:user_id, :updated_at],
+          :include => [
+          :user => {:only => [:username]}
+        ]},
         :comments => {:only => [:id, :content, :created_at], 
           :include => [:user => {:only => :username}]}
       ]

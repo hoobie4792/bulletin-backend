@@ -23,6 +23,7 @@ Rails.application.routes.draw do
       post '/update-user', :to => 'users#update'
       post '/get-posts-by-tag', :to => 'tags#get_posts'
       post '/search-users', :to => 'users#search_users'
+      post '/create-shared-post', :to => 'posts#create_shared_post'
       get '/get-interests-and-news-sources', :to => 'users#get_interests_and_news_sources'
     end
   end
