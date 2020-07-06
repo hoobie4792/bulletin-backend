@@ -10,8 +10,8 @@ Rails.application.routes.draw do
       resources :shares, :only => [:create]
       resources :follows, :only => [:create]
       resources :messages, :only => [:index, :create, :destroy]
-      resources :news_sources, :only => [:index]
-      resources :interests, :only => [:index]
+      resources :news_sources, :only => [:index, :show]
+      resources :interests, :only => [:index, :show]
       resources :user_news_sources, :only => [:create]
       resources :user_interests, :only => [:create]
       resources :notifications, :only => [:index]
@@ -23,6 +23,7 @@ Rails.application.routes.draw do
       post '/update-user', :to => 'users#update'
       post '/get-posts-by-tag', :to => 'tags#get_posts'
       post '/search-users', :to => 'users#search_users'
+      get '/get-interests-and-news-sources', :to => 'users#get_interests_and_news_sources'
     end
   end
 end

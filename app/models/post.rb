@@ -72,6 +72,22 @@ class Post < ApplicationRecord
     )
   end
 
+  def self.get_interest_posts(interest)
+    posts = []
+    newsapi = News.new(ENV['NEWSAPI_KEY'])
+    api_response = newsapi.get_top_headlines(category: interest, language: 'en', country: 'us')
+    posts += self.map_api_response(api_response)
+    posts
+  end
+
+  def self.get_source_posts(source)
+    posts = []
+    newsapi = News.new(ENV['NEWSAPI_KEY'])
+    api_response = newsapi.get_top_headlines(sources: source)
+    posts += self.map_api_response(api_response)
+    posts
+  end
+
   private
 
   def self.get_interests_posts(user)
