@@ -18,11 +18,15 @@ class Post < ApplicationRecord
 
   def self.get_posts_for_user(user)
     posts = []
-    posts += self.get_interests_posts(user)
-    posts += self.get_sources_posts(user)
-    posts = posts.map { |post| Post.find_by(content: post.content) || post }
-    posts = posts.uniq { |post| post.news_title }
-    posts += self.get_followed_users_posts(user)
+    begin
+      posts += self.get_interests_posts(user)
+      posts += self.get_sources_posts(user)
+      posts = posts.map { |post| Post.find_by(content: post.content) || post }
+      posts = posts.uniq { |post| post.news_title }
+      posts += self.get_followed_users_posts(user)
+    rescue => exception
+      posts += Post.all
+    end
     posts.sort { |a,b| b.created_at <=> a.created_at }
   end
 
