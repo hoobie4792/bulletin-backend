@@ -49,6 +49,14 @@ class User < ApplicationRecord
     self.followers.include? current_user
   end
 
+  def following_count
+    self.followers.length
+  end
+
+  def followers_count
+    self.followeds.length
+  end
+
   def private_serialized
     self.as_json(
       :only => [:username, :bio, :created_at],
@@ -59,12 +67,17 @@ class User < ApplicationRecord
   def serialized
     self.as_json(
       :only => [:username, :bio, :created_at],
-      :methods => [:posts_count, :following],
+      :methods => [:posts_count, :following, :following_count, :followers_count],
       :include => [
         :posts => {:except => [:user_id, :updated_at],
           :methods => :likes_count,
           :include => [
             :user => {:only => [:username]},
+            :shared_post => {
+              :except => [:user_id, :updated_at],
+              :include => [
+              :user => {:only => [:username]}
+            ]},
             :comments => {:only => [:id, :content, :created_at], 
               :include => [user: {:only => :username}]}
           ]
