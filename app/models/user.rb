@@ -40,7 +40,6 @@ class User < ApplicationRecord
   validates :username, :email, :uniqueness => true
   validates :email, :format => { with: URI::MailTo::EMAIL_REGEXP }
 
-
   def get_user_posts
     return self.posts
   end
