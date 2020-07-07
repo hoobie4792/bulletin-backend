@@ -35,10 +35,11 @@ class Api::V1::UsersController < ApplicationController
 
   def update
     if current_user
-      if current_user.update(user_params) 
-        render :json => current_user.serialized, :status => :ok
+      user = current_user
+      if user.update(username: user_params[:username], bio: user_params[:bio])
+        render :json => user.serialized, :status => :ok
       else
-        render :json => { message: 'Could not update user' }, :status => :bad_request
+        render :json => { message: user.errors.full_messages.join(', ') }, :status => :bad_request
       end
     else
       render :json => { message: 'Must be logged in to update user' }, :status => :unauthorized
