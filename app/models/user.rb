@@ -5,6 +5,10 @@ class User < ApplicationRecord
   has_many :followers, :through => :follower_relationships, :source => :follower
   has_many :followed_relationships, :foreign_key => :follower_id, :class_name => 'Follow'
   has_many :followeds, :through => :followed_relationships, :source => :followed
+
+  # Follower Request Relationships
+  has_many :follower_requests, :foreign_key => :followed_id, :class_name => 'FollowRequest'
+  has_many :followed_requests, :foreign_key => :follower_id, :class_name => 'FollowRequest'
   
   # Messaging relationships
   has_many :participants
@@ -46,7 +50,15 @@ class User < ApplicationRecord
   end
 
   def following
-    self.followers.include? current_user
+    if self.followers.include? current_user
+      return 'unfollow'
+    else
+      if self.follower_requests.where(follower: current_user).any?
+        return 'pending request'
+      else
+        return 'follow'
+      end
+    end
   end
 
   def following_count
