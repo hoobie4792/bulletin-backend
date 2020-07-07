@@ -3,22 +3,14 @@ class Api::V1::FollowsController < ApplicationController
   before_action :authenticate, :only => [:create]
 
   def create
+    followed_user = User.find_by(username: follow_params[:username])
     if current_user
-      followed_user = User.find_by(username: follow_params[:username])
-      follow = Follow.find_by(follower: current_user, followed: followed_user)
-      if follow
-        if follow.destroy
-          render :json => false, :status => :ok
-        else
-          render :json => { message: follow.errors.full_messages.join(', ') }, :status => :bad_request
-        end
+      follow = Follow.new(follower: current_user, followed: followed_user)
+      if follow.save
+        followed_user.follower_requests.where(follower: current_user).destroy_all
+        render :json => true, :status => :ok
       else
-        follow = Follow.new(follower: current_user, followed: followed_user)
-        if follow.save
-          render :json => true, :status => :ok
-        else
-          render :json => { message: follow.errors.full_messages.join(', ') }, :status => :bad_request
-        end
+        render :json => { message: follow.errors.full_messages.join(', ') }, :status => :bad_request
       end
     else
       render :json => { message: 'Must be logged in to follow user' }, :status => :unauthorized
