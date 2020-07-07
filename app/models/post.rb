@@ -14,6 +14,8 @@ class Post < ApplicationRecord
   has_many :post_tags
   has_many :tags, :through => :post_tags
 
+  default_scope { order(created_at: :desc) }
+
   attr_accessor :current_user
 
   def self.get_posts_for_user(user)
