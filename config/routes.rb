@@ -10,7 +10,7 @@ Rails.application.routes.draw do
       resources :shares, :only => [:create]
       resources :follows, :only => [:create]
       resources :follow_requests, :only => [:create, :update, :destroy]
-      resources :messages, :only => [:index]
+      resources :messages, :only => [:create]
       resources :news_sources, :only => [:index, :show]
       resources :interests, :only => [:index, :show]
       resources :user_news_sources, :only => [:create]
