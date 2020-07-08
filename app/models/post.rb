@@ -90,7 +90,7 @@ class Post < ApplicationRecord
     posts = []
     newsapi = News.new(ENV['NEWSAPI_KEY'])
     api_response = newsapi.get_top_headlines(category: interest, language: 'en', country: 'us')
-    posts += self.map_api_response(api_response, nil)
+    posts += self.map_api_response(api_response)
     posts
   end
 
@@ -98,7 +98,7 @@ class Post < ApplicationRecord
     posts = []
     newsapi = News.new(ENV['NEWSAPI_KEY'])
     api_response = newsapi.get_top_headlines(sources: source)
-    posts += self.map_api_response(api_response, nil)
+    posts += self.map_api_response(api_response)
     posts
   end
 
@@ -109,7 +109,7 @@ class Post < ApplicationRecord
     newsapi = News.new(ENV['NEWSAPI_KEY'])
     user.interests.each do |interest|
       api_response = newsapi.get_top_headlines(category: interest.name.downcase, language: 'en', country: 'us')
-      posts += self.map_api_response(api_response, interest.name)
+      posts += self.map_api_response(api_response)
     end
     posts
   end
@@ -119,12 +119,12 @@ class Post < ApplicationRecord
     newsapi = News.new(ENV['NEWSAPI_KEY'])
     user.news_sources.each do |source|
       api_response = newsapi.get_top_headlines(sources: source.name.split(' ').join('-').downcase)
-      posts += self.map_api_response(api_response, source.name)
+      posts += self.map_api_response(api_response)
     end
     posts
   end
 
-  def self.map_api_response(api_response, reason)
+  def self.map_api_response(api_response)
     api_response.select { |res| !res.content.nil? }
     .map { |res| !res.content.nil? && Post.new(
       content: res.content.split(' [+').first,
@@ -134,8 +134,7 @@ class Post < ApplicationRecord
       news_source: res.name,
       news_title: res.title,
       news_url: res.url,
-      is_news_story: true,
-      reason: reason) }
+      is_news_story: true) }
   end
 
   def self.get_followed_users_posts(user)
