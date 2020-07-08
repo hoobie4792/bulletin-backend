@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_08_143723) do
+ActiveRecord::Schema.define(version: 2020_07_08_183856) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -106,6 +106,7 @@ ActiveRecord::Schema.define(version: 2020_07_08_143723) do
     t.string "news_title"
     t.string "news_url"
     t.boolean "is_news_story", default: false
+    t.string "reason"
   end
 
   create_table "shares", force: :cascade do |t|
