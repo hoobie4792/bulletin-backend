@@ -16,7 +16,9 @@ Rails.application.routes.draw do
       resources :user_news_sources, :only => [:create]
       resources :user_interests, :only => [:create]
       resources :notifications, :only => [:index]
-      resources :conversations, :only => [:index, :create]
+      resources :conversations, :only => [:index, :create] do 
+        post '/set-messages-read', :to => 'conversations#set_messages_read'
+      end
 
       post '/login', :to => 'sessions#create'
       post '/get-username', :to => 'sessions#get_username'
@@ -28,6 +30,7 @@ Rails.application.routes.draw do
       get '/get-interests-and-news-sources', :to => 'users#get_interests_and_news_sources'
       post '/accept-follow-request', :to => 'follow_requests#accept_request'
       post '/deny-follow-request', :to => 'follow_requests#deny_request'
+      get '/get-badges', :to => 'users#get_badges'
     end
   end
 end

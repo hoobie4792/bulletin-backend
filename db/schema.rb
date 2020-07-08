@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_07_140436) do
+ActiveRecord::Schema.define(version: 2020_07_08_143723) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -78,6 +78,7 @@ ActiveRecord::Schema.define(version: 2020_07_07_140436) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "notification_type"
+    t.boolean "read", default: false
   end
 
   create_table "participants", force: :cascade do |t|
@@ -130,6 +131,13 @@ ActiveRecord::Schema.define(version: 2020_07_07_140436) do
   create_table "user_news_sources", force: :cascade do |t|
     t.integer "user_id"
     t.integer "news_source_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "user_unread_messages", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "message_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
