@@ -4,6 +4,7 @@ class Api::V1::NotificationsController < ApplicationController
 
   def index
     if current_user
+      current_user.notifications.each { |notification| notification.update(read: true) }
       notification = current_user.notifications.order('created_at desc').limit(20)
       render :json => notification.as_json(:only => [:id, :content, :notification_type, :created_at]), :status => :ok
     else

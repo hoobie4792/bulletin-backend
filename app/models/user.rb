@@ -13,6 +13,7 @@ class User < ApplicationRecord
   # Messaging relationships
   has_many :participants
   has_many :conversations, :through => :participants
+  has_many :conversations_messages, :through => :conversations, :source => :messages
   has_many :messages
 
   # Notifications relationship
@@ -28,9 +29,13 @@ class User < ApplicationRecord
   has_many :user_news_sources
   has_many :news_sources, :through => :user_news_sources
 
-  #Interests relationships
+  # Interests relationships
   has_many :user_interests
   has_many :interests, :through => :user_interests
+
+  # Unread Messages
+  has_many :user_unread_messages
+  has_many :unread_messages, :through => :user_unread_messages, :source => :message
 
   has_secure_password
 

@@ -1,6 +1,6 @@
 class Api::V1::UsersController < ApplicationController
   
-  before_action :authenticate, :only => [:show, :create, :update, :destroy, :get_interests_and_news_sources]
+  before_action :authenticate, :only => [:show, :create, :update, :destroy, :get_interests_and_news_sources, :get_badges]
   
   def show
     user = User.find_by(username: params[:id])
@@ -74,6 +74,17 @@ class Api::V1::UsersController < ApplicationController
       }
     else
       render :json => { message: 'Must be logged in to get interests and news sources' }
+    end
+  end
+
+  def get_badges
+    if current_user
+      render :json => { 
+        notifications: current_user.notifications.where(read: false).length,
+        messages: current_user.unread_messages.length
+      }, :status => :ok
+    else
+      render :json => { message: 'Must be logged in to get badge counts' }
     end
   end
 
