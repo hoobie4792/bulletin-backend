@@ -90,7 +90,7 @@ class Post < ApplicationRecord
     posts = []
     newsapi = News.new(ENV['NEWSAPI_KEY'])
     api_response = newsapi.get_top_headlines(category: interest, language: 'en', country: 'us')
-    posts += self.map_api_response(api_response)
+    posts += self.map_api_response(api_response, nil)
     posts
   end
 
@@ -98,7 +98,7 @@ class Post < ApplicationRecord
     posts = []
     newsapi = News.new(ENV['NEWSAPI_KEY'])
     api_response = newsapi.get_top_headlines(sources: source)
-    posts += self.map_api_response(api_response)
+    posts += self.map_api_response(api_response, nil)
     posts
   end
 
@@ -109,7 +109,7 @@ class Post < ApplicationRecord
     newsapi = News.new(ENV['NEWSAPI_KEY'])
     user.interests.each do |interest|
       api_response = newsapi.get_top_headlines(category: interest.name.downcase, language: 'en', country: 'us')
-      posts += self.map_api_response(api_response, interest)
+      posts += self.map_api_response(api_response, interest.name)
     end
     posts
   end
@@ -119,7 +119,7 @@ class Post < ApplicationRecord
     newsapi = News.new(ENV['NEWSAPI_KEY'])
     user.news_sources.each do |source|
       api_response = newsapi.get_top_headlines(sources: source.name.split(' ').join('-').downcase)
-      posts += self.map_api_response(api_response, source)
+      posts += self.map_api_response(api_response, source.name)
     end
     posts
   end
@@ -135,7 +135,7 @@ class Post < ApplicationRecord
       news_title: res.title,
       news_url: res.url,
       is_news_story: true,
-      reason: "Because you follow #{reason.name}") }
+      reason: reason) }
   end
 
   def self.get_followed_users_posts(user)
