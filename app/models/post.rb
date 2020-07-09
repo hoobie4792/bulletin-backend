@@ -91,6 +91,17 @@ class Post < ApplicationRecord
     newsapi = News.new(ENV['NEWSAPI_KEY'])
     api_response = newsapi.get_top_headlines(category: interest, language: 'en', country: 'us')
     posts += self.map_api_response(api_response)
+
+    saved_news_stories = Post.all.where(is_news_story: true)
+    posts = posts.map do |curr_post|
+      matched_news_story = saved_news_stories.find { |sns| sns.news_title == curr_post.news_title && sns.content == curr_post.content }
+      if matched_news_story
+        matched_news_story
+      else
+        curr_post
+      end
+    end
+    
     posts
   end
 
@@ -99,6 +110,17 @@ class Post < ApplicationRecord
     newsapi = News.new(ENV['NEWSAPI_KEY'])
     api_response = newsapi.get_top_headlines(sources: source)
     posts += self.map_api_response(api_response)
+
+    saved_news_stories = Post.all.where(is_news_story: true)
+    posts = posts.map do |curr_post|
+      matched_news_story = saved_news_stories.find { |sns| sns.news_title == curr_post.news_title && sns.content == curr_post.content }
+      if matched_news_story
+        matched_news_story
+      else
+        curr_post
+      end
+    end
+
     posts
   end
 
